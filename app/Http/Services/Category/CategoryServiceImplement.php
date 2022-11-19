@@ -23,42 +23,22 @@ class CategoryServiceImplement extends Service implements CategoryService
 
     public function create($attributes)
     {
-        $category = $this->mainRepository->whereName($attributes['name']);
-        if ($category) {
-            return response()->json([
-                'message' => 'Category name already registered!',
-                'status' => 'error',
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
         $category = $this->mainRepository->create($attributes);
 
-        return response()->json([
-            'message' => 'Category name added successfully!',
-            'status' => 'success',
-            'data' => $category
-        ], Response::HTTP_CREATED);
+        return $category;
     }
 
     public function update($id, $attributes)
     {
         $category = $this->mainRepository->update($id, $attributes);
 
-        return response()->json([
-            'message' => 'Category name updated successfully!',
-            'status' => 'success',
-            'data' => $category
-        ], Response::HTTP_OK);
+        return $category;
     }
 
     public function delete($id)
     {
         $category = $this->mainRepository->delete($id);
 
-        return response()->json([
-            'message' => 'Category name deleted successfully!',
-            'status' => 'success',
-            'data' => $category
-        ], Response::HTTP_OK);
+        return $category;
     }
 }

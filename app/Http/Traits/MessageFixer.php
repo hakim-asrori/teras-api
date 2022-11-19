@@ -45,7 +45,7 @@ trait MessageFixer
     protected function error($message)
     {
         return response()->json([
-            'message' => $message->getMessage(),
+            'message' => $message,
             'type' => 'error',
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }

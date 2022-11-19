@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests\Category;
 
+use App\Models\Category;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class UpdateCategoryRequest extends FormRequest
@@ -27,8 +29,13 @@ class UpdateCategoryRequest extends FormRequest
      */
     public function rules()
     {
+        $category = Category::find(request('id'));
+
         return [
-            'name' => 'required',
+            'name' => [
+                'required',
+                Rule::unique('categories')->ignore($category)
+            ],
             'status' => 'required'
         ];
     }

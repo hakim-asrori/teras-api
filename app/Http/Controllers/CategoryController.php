@@ -8,7 +8,7 @@ use App\Http\Resources\Category\CategoryCollection;
 use App\Http\Resources\Category\CategoryDetail;
 use App\Http\Searches\CategorySearch;
 use App\Http\Services\Category\CategoryService;
-use App\Http\Traits\ErrorFixer;
+use App\Http\Traits\MessageFixer;
 use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
-    use ErrorFixer;
+    use MessageFixer;
 
     protected $categoryService;
 
@@ -50,10 +50,11 @@ class CategoryController extends Controller
 
         try {
             DB::commit();
-            return $this->categoryService->create($request->all());
+            $result = $this->categoryService->create($request->all());
+            return $this->createSuccess('Category', $result);
         } catch (Exception $e) {
             DB::rollback();
-            return $this->createError();
+            return $this->error($e->getMessage());
         }
     }
 
@@ -83,10 +84,11 @@ class CategoryController extends Controller
 
         try {
             DB::commit();
-            return $this->categoryService->update($id, $request->all());
+            $result = $this->categoryService->update($id, $request->all());
+            return $this->updateSuccess('Category', $result);
         } catch (Exception $e) {
             DB::rollback();
-            return $this->updateError();
+            return $this->error($e->getMessage());
         }
     }
 
@@ -98,6 +100,14 @@ class CategoryController extends Controller
      */
     public function delete($id)
     {
-        return $this->categoryService->delete($id);
+        DB::beginTransaction();
+
+        try {
+            $result = $this->categoryService->delete($id);
+            return $this->deleteSuccess('Category', $result);
+        } catch (Exception $e) {
+            DB::rollback();
+            return $this->error($e->getMessage());
+        }
     }
 }

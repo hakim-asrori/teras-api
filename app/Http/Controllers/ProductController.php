@@ -55,7 +55,7 @@ class ProductController extends Controller
             return $this->createSuccess('Product', $result);
         } catch (Exception $e) {
             DB::rollback();
-            return $this->error($e);
+            return $this->error($e->getMessage());
         }
     }
 
@@ -100,7 +100,7 @@ class ProductController extends Controller
             return $this->updateSuccess('Product', $result);
         } catch (Exception $e) {
             DB::rollback();
-            return $this->error($e);
+            return $this->error($e->getMessage());
         }
     }
 
@@ -121,7 +121,7 @@ class ProductController extends Controller
             return $this->statusSuccess('Product', $result);
         } catch (Exception $e) {
             DB::rollback();
-            return $this->error($e);
+            return $this->error($e->getMessage());
         }
     }
 
@@ -141,7 +141,7 @@ class ProductController extends Controller
             return $this->deleteSuccess('Product', $result);
         } catch (Exception $e) {
             DB::rollback();
-            return $this->error($e);
+            return $this->error($e->getMessage());
         }
     }
 }
