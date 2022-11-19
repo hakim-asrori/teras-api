@@ -8,7 +8,7 @@ use App\Http\Resources\Product\ProductCollection;
 use App\Http\Resources\Product\ProductDetail;
 use App\Http\Searches\ProductSearch;
 use App\Http\Services\Product\ProductService;
-use App\Http\Traits\ErrorFixer;
+use App\Http\Traits\MessageFixer;
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    use ErrorFixer;
+    use MessageFixer;
 
     protected $productService;
 
@@ -51,10 +51,11 @@ class ProductController extends Controller
 
         try {
             DB::commit();
-            return $this->productService->create($request->all());
+            $result = $this->productService->create($request->all());
+            return $this->createSuccess('Product', $result);
         } catch (Exception $e) {
             DB::rollback();
-            return $this->createError();
+            return $this->error($e);
         }
     }
 
@@ -95,10 +96,11 @@ class ProductController extends Controller
 
         try {
             DB::commit();
-            return $this->productService->update($id, $request->all());
+            $result = $this->productService->update($id, $request->all());
+            return $this->updateSuccess('Product', $result);
         } catch (Exception $e) {
             DB::rollback();
-            return $this->updateError();
+            return $this->error($e);
         }
     }
 
@@ -111,12 +113,15 @@ class ProductController extends Controller
      */
     public function updateStatus(Request $request, $id)
     {
+        DB::beginTransaction();
+
         try {
             DB::commit();
-            return $this->productService->updateStatus($id, $request->all());
+            $result = $this->productService->updateStatus($id, $request->all());
+            return $this->statusSuccess('Product', $result);
         } catch (Exception $e) {
             DB::rollback();
-            return $this->createError();
+            return $this->error($e);
         }
     }
 
@@ -128,6 +133,15 @@ class ProductController extends Controller
      */
     public function delete($id)
     {
-        return $this->productService->delete($id);
+        DB::beginTransaction();
+
+        try {
+            DB::commit();
+            $result = $this->productService->delete($id);
+            return $this->deleteSuccess('Product', $result);
+        } catch (Exception $e) {
+            DB::rollback();
+            return $this->error($e);
+        }
     }
 }

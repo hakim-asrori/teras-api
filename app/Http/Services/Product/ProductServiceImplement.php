@@ -39,11 +39,7 @@ class ProductServiceImplement extends Service implements ProductService
 
         $product = $this->mainRepository->create($attributes);
 
-        return response()->json([
-            'message' => 'Product has added!',
-            'status' => 'success',
-            'data' => $product
-        ], Response::HTTP_CREATED);
+        return $product;
     }
 
     public function update($id, $attributes)
@@ -63,11 +59,7 @@ class ProductServiceImplement extends Service implements ProductService
 
         $product = $product->update($attributes);
 
-        return response()->json([
-            'message' => 'Product has updated!',
-            'status' => 'success',
-            'data' => $product
-        ], Response::HTTP_OK);
+        return $product;
     }
 
     public function updateStatus($id, $attributes)
@@ -76,11 +68,7 @@ class ProductServiceImplement extends Service implements ProductService
 
         $product = $this->mainRepository->update($id, $attributes);
 
-        return response()->json([
-            'message' => 'Product has updated status!',
-            'status' => 'success',
-            'data' => $product
-        ], Response::HTTP_OK);
+        return $product;
     }
 
     public function delete($id)
@@ -93,10 +81,6 @@ class ProductServiceImplement extends Service implements ProductService
 
         $product->delete();
 
-        return response()->json([
-            'message' => 'Product has deleted!',
-            'status' => 'success',
-            'data' => $product
-        ], Response::HTTP_OK);
+        return $product;
     }
 }
